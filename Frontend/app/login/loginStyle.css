@@ -1,0 +1,29 @@
+#loginDesRight{
+    background-image: url("https://res.cloudinary.com/qualifier/image/upload/v1714027708/LoginDeRight_tgfiem.svg");
+    height: 100vh;
+    width: 100%;
+    background-position:bottom right;
+}
+#loginDesLeft{
+    background-image: url("https://res.cloudinary.com/qualifier/image/upload/v1714028335/LoginDeLeft_oh30wl.svg");
+    height: 100vh;
+    background-position:bottom left ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+#loginCard{
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    width: 90%;
+    height: 80vh;
+    padding: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+#loginLogo{
+    position: relative;
+    /* left: 120px; */
+    width: 200px;
+}

@@ -1,0 +1,22 @@
+#statBg{
+    border-radius: 16px;
+    background-image: url("https://res.cloudinary.com/oasismanors/image/upload/v1713617917/bgStat_ukvwms.jpg");
+    width: 100%;
+    height: 175px;
+    padding: 10px 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+#aboutCard{
+    width: 100%;
+    padding: 10px 20px;
+    height: 175px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+.statsIcons{
+    font-size: 28px;
+    margin-right: 8px;
+}

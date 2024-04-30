@@ -1,0 +1,29 @@
+#cardUserImg{
+    width: 65px;
+    height: 65px;
+    margin-bottom: 20px;
+    object-fit: cover;
+    transform: scale(1.2)rotateZ(-11deg);
+    transition:transform .2s ease-out;
+    display:block;
+    box-shadow:rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+#cardUserImg:hover{
+    transform: scale(1)rotateZ(0deg);
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.dataBox{
+    position: relative;     
+    width:80px;
+    height:50px;
+    display: flex;
+    border-radius: 16px;
+    justify-content: center;
+    flex-direction: column !important;
+    align-items: center;
+    background-image: url("https://res.cloudinary.com/oasismanors/image/upload/v1713524116/bgOpacity30_hpamuc.png");
+    background-size: cover;	
+    object-fit: cover;
+    background-repeat: no-repeat;
+}
