@@ -1,7 +1,7 @@
 "use client";
 import React, {useState,Fragment, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {AppBar,Badge,Box,CssBaseline,Divider,Container,Drawer,IconButton,List,ListItem,ListItemButton,ListItemText,Toolbar,Typography,Button, Icon} from '@mui/material/';
+import {AppBar,Box,CssBaseline,Divider,Container,Drawer,IconButton,List,ListItem,ListItemButton,ListItemText,Toolbar,Typography,Button, Icon} from '@mui/material/';
 import BackToTop from "./BackToTop";
 import { FiMenu } from "react-icons/fi";
 import Link from 'next/link';
@@ -10,17 +10,18 @@ import SearchNav from './SearchNav';
 import UserIconNav from "./UserIconNav";
 import Notification from './Notification';
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
 
 function Header(props) {
-  const { window, children } = props;
+  const { window, children,navTabVal } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [navTabVal, setNavTabVal] = useState('1')
+  // const [navTabVal, setNavTabVal] = useState('1')
   const [user, setUser] = useState({});
 
-
+  const router = useRouter();
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -49,6 +50,17 @@ function Header(props) {
     </Box>
   );
 
+  const handleNav =(e)=>{
+    if(e==="1"){
+      router.push(`/dashboard`)
+    }else if(e==="2"){
+      router.push(`/network`)
+    }else if(e==="3"){
+      console.log("Community")
+    }else if(e==="4"){
+      console.log("Chat")
+    }
+  }
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
@@ -72,7 +84,7 @@ function Header(props) {
           <img style={{height:"35px"}} src="https://res.cloudinary.com/qualifier/image/upload/v1714030411/applied-logo-white-horiz_s6zkfp.svg" alt="AppliedLogo" id="loginLogo" />
           </Link>
           <div style={{flexGrow:1}}/>
-          <TopNavTabs navTabVal={navTabVal} setNavTabVal={e=>setNavTabVal(e)}/>
+          <TopNavTabs navTabVal={navTabVal} handleNav={e=>handleNav(e)}/>
           <div style={{flexGrow:1}}/>
           <Box sx={{display: { xs: 'none', sm: 'block'}}}>
           <SearchNav/>
@@ -81,7 +93,6 @@ function Header(props) {
         <UserIconNav user={user}/>
         </Toolbar>
         </Container>
-       
       </AppBar>
       <nav>
         <Drawer

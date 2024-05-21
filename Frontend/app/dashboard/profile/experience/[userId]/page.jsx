@@ -4,12 +4,22 @@ import MySnackbar from "../../../../Components/MySnackbar/MySnackbar";
 import {Grid, Container, Typography,Card,Box,Badge,TextField,Fab, Stepper,Step,StepLabel, Divider,Table,TableHead,TableRow,TableCell,TableBody,ButtonGroup, IconButton } from '@mui/material/';
 import {authService} from "../../../../services"
 import { useRouter } from "next/navigation";
-
 import { FcDeleteRow } from "react-icons/fc";
 import { FaEdit } from "react-icons/fa";
 
 const steps = ['Experience', 'Certificates', 'Degree', 'Patent','Reference'];
 
+export function MyStepper({value}){
+return    <Stepper activeStep={value}>
+{steps.map((label, index) => {
+  return (
+    <Step key={label}>
+      <StepLabel>{label}</StepLabel>
+    </Step>
+  );
+})}
+</Stepper>
+}
 function Experience({params}) {
   const {userId} = params;
   const [_id,setId] =useState("");
@@ -23,17 +33,26 @@ function Experience({params}) {
   const snackRef = useRef();
   const router = useRouter();
 
+  const setData = (d)=>{
+    setId(d?._id ?? "");
+    setCompany(d?.company ?? "");
+    setTitle((d?.title ?? ""));
+    setStartDate(d?.startDate ?? "");
+    setEndDate(d?.endDate ?? "");
+    setDesc(d?.description ?? "");
+  }
   const handlePerData = async (e) => {
     e.preventDefault();
     let myData = {_id,userId,company,title,startDate,endDate,description}
     setLoading(true);
     try {
-      let res = await authService.post(`api/v1/auth/profile/add/additionalData/experience`,myData);
+      let res = await authService.post(`api/v1/auth/profile/add/additionalData/experience/${_id}`,myData);
       snackRef.current.handleSnack(res);
-      setLoading(false)
+      setLoading(false);
+      setData("")
       if(res.variant ==="success"){
-        // router.push(`/dashboard/profile/experience/${userId}`)
-
+        getData();
+        router.push(`/dashboard/profile/certificates/${userId}`)
       }  
     } catch (error) {
       console.log(error);
@@ -44,7 +63,7 @@ function Experience({params}) {
     try {
       setLoading(true)
       let res = await authService.get(`api/v1/auth/profile/get/oneProfile`);
-      snackRef.current.handleSnack(res.data);
+      snackRef.current.handleSnack(res);
       if(res.variant === "success"){
         setLoading(false)
         setAllExp(res.data.experience)
@@ -58,22 +77,13 @@ function Experience({params}) {
     if(userId){
       getData()
     }
-  }, [userId])
+  }, [userId,_id])
   
-  const setData = (d)=>{
-    setId(d?._id ?? "");
-    setCompany(d?.company ?? "");
-    setTitle((d?.title ?? ""));
-    setStartDate(d?.startDate ?? "");
-    setEndDate(d?.endDate ?? "");
-    setDesc(d?.description ?? "");
-  }
   const handleDelete = async(row)=>{
     try {
       setLoading(true)
-      let res = await authService.delete(`api/v1/auth/profile/add/additionalData/experience/${row?._id}`);
-      snackRef.current.handleSnack(res.data);
-      console.log(res)
+      let res = await authService.delete(`api/v1/auth/profile/delete/additionalData/experience/${row._id}`);
+      snackRef.current.handleSnack(res);
       if(res.variant === "success"){
         setLoading(false);
         setData("");
@@ -89,15 +99,7 @@ function Experience({params}) {
     <Container className='vCenter'>
       <Box sx={{ width: '100%' }}>
       <Typography variant="h6" gutterBottom align="center" >Setup Your Personal Profile</Typography>
-      <Stepper activeStep={0}>
-        {steps.map((label, index) => {
-          return (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
+        <MyStepper value={0}/>
       <br/>
       </Box>
     
@@ -135,10 +137,10 @@ function Experience({params}) {
           <br />
           </Grid>
         <Grid item xs={12} sx={{display:"flex",justifyContent:"space-evenly"}}>
-        <Fab variant="extended"  type='submit' sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="inherit">
+        <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="inherit" onClick={()=>router.push("/dashboard")}>
           Skip
           </Fab>
-            <Fab variant="extended"  type='submit' sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="primary">
+            <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/certificates/${userId}`)} size='small' color="primary">
           Next
           </Fab>
         </Grid>
@@ -163,6 +165,7 @@ function Experience({params}) {
           <TableBody>
           {allExp.map((row,i)=> <TableRow
               key={i}
+              hover
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="left">
@@ -194,11 +197,9 @@ function Experience({params}) {
             </ButtonGroup>
             </TableCell>
             </TableRow>)}
-          
           </TableBody>
         </Table>
       </Box>
-    
     </Card>
     </Container>
         

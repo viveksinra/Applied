@@ -1,30 +1,86 @@
 "use client";
-import React,{Fragment, useState} from 'react'
+import React,{Fragment, useState,useRef,useEffect} from 'react'
 import { Card,List,ListItem,ListItemAvatar,Avatar,ListItemText,Stack,Badge, Divider,Grid, Typography } from '@mui/material';
 import { GrMail } from "react-icons/gr";
+import MySnackbar from "../../Components/MySnackbar/MySnackbar";
+import {authService} from "../../services/index";
 
 function YouMayKnow() {
-    const [person,setPerson] = useState([{img:"https://nettv4u.com/imagine/27-03-2020/kunal-kamra.png",title:"Kunal Kamra",verified:true, subtitle:"@kk_fun",id:"ssdsdefd1255454"},{img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Sachin-Tendulkar_%28cropped%29.jpg/220px-Sachin-Tendulkar_%28cropped%29.jpg",title:"Sachin Tendulkar",verified:false, subtitle:"@sachin_125",id:"545411sd4f5"},{img:"https://media.andhrajyothy.com/media/2024/20240413/Annamalai_ea46614d93_V_jpg--799x414-4g.webp",title:"K. Annamalie",verified:true, subtitle:"@annamalie",id:"fdfasdfsdee"},{img:"https://m.economictimes.com/thumb/msid-66571054,width-1200,height-900,resizemode-4,imgsize-666529/mohan-bhagwat-pti-1200.jpg",title:"Mohan Bhagwat",verified:true, subtitle:"@RSS_Chief",id:"5465d4asfsdfae"},{img:"https://www.scrolldroll.com/wp-content/uploads/2021/09/Dhanush-best-south-indian-actors-scaled.jpg",title:"Dhanush",verified:true, subtitle:"@Dhanush",id:"654587484sdswe"}])
-  return (
-    <Card elevation={2} sx={{width:'100%',}}>
-         <List disablePadding sx={{ width: '100%', bgcolor: 'background.paper', }} >
+  const snackRef = useRef();
+  const [loading,setLoading] = useState(false);
+  const [person,setPerson] = useState([]);
+  const getPeopleData = async()=>{
+    try {
+        setLoading(true)
+        let res = await authService.get(`api/v1/network/get/peopleymk`);
+        if(res.variant === "success"){
+          setLoading(false);
+          setPerson(res.data);
+        }  
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
+}
+  useEffect(() => {
+    getPeopleData();
+  }, [])
+  const handleInvite= async(i,id)=>{
+    try {
+        setLoading(true)
+        let res = await authService.post(`api/v1/network/send/invitation`, {invitationTo:id});
+        if(res.variant === "success"){
+          setLoading(false);
+          snackRef.current.handleSnack(res)
+         const oldArr = inviteCard;
+         oldArr[i].pending = true;
+         setInviteCard(oldArr)
+        }  
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
+}
+const handleCancelInvite=async(i, id)=>{
+  try {
+      setLoading(true)
+      let res = await authService.delete(`api/v1/network/delete/invitation/${id}`);
+      if(res.variant === "success"){
+        setLoading(false);
+        snackRef.current.handleSnack(res)
+       const oldArr = inviteCard;
+       oldArr[i].pending = false;
+       setInviteCard(oldArr)
+      }  
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
+    }
+}
+  return (<Fragment>
+        <Card elevation={2} sx={{width:'100%',}}>
+          <List disablePadding sx={{ width: '100%', bgcolor: 'background.paper', }} >
         {person?.map((f,i)=><Grid key={i}>
-            <ListItem dense disableGutters disablePadding sx={{padding:"0px 10px"}} >
+         <ListItem dense disableGutters disablePadding sx={{padding:"0px 10px"}} >
         <ListItemAvatar>
-       <Avatar alt={f?.title} src={f?.img} />
+        <Avatar alt={f?.firstName} src={f?.userImage} />
 
         </ListItemAvatar>
-        <ListItemText primary={<Typography variant="subtitle2" color="primary">{f?.title}</Typography> } secondary={<Stack direction="row" spacing={1}>{f?.subtitle}  &nbsp; {f?.verified && <SvgVerified/> }</Stack>} />
-        <Grid sx={{width:"80px",textAlign:"center",border:"1px solid #a9c8e7", padding:"0px 16px",borderRadius:"20px",fontSize:"14px",cursor:"pointer",color:"#65abf2"}}>
-  Follow
-</Grid>
-      </ListItem>
-    <Divider light/>
-        </Grid> 
+        <ListItemText primary={<Typography variant="subtitle2" color="primary">{`${f.firstName} ${f.lastName}`}</Typography> } secondary={<Stack direction="row" spacing={1}>@{f?.userName}  &nbsp; {f?.verified && <SvgVerified/> }</Stack>} />
+        {f.pending ?  <Button variant="outlined" endIcon={<FcCancel />} color="secondary" onClick={()=>handleCancelInvite(i,c?._id)} sx={{borderRadius:"30px",fontSize:"12px",textTransform:"capitalize",padding:"2px 10px"}}>Pending</Button> :  <Grid onClick={()=>handleInvite(i,f?._id)}  sx={{width:"80px",textAlign:"center",border:"1px solid #a9c8e7", padding:"0px 16px",borderRadius:"20px",fontSize:"14px",cursor:"pointer",color:"#65abf2"}}>
+        Follow
+        </Grid> }
+      
         
-    )}
-         </List>
-    </Card>
+        </ListItem>
+        <Divider light/>
+        </Grid> 
+
+        )}
+          </List>
+        </Card>
+     <MySnackbar ref={snackRef} />
+     </Fragment>
   )
 }
 

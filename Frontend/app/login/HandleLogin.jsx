@@ -18,6 +18,7 @@ function HandleLogin() {
     const [password, setPass] = useState("");
     const [loading, setLoading] = useState(false);
     const { login } = useLogin();
+    const [error,setErr] = useState(false);
     const snackRef = useRef();
     const router = useRouter();
 
@@ -28,6 +29,7 @@ function HandleLogin() {
           try {
             const res = await login(email, password);
             if (res.variant==="success" && res.token) {
+              setErr(false)
               // dispatch({ type: LOGIN_USER, payload: res });
               snackRef.current.handleSnack({
                 message: "Login Successful! redirecting to dashboard.",
@@ -37,6 +39,7 @@ function HandleLogin() {
               router.push("/dashboard");
               // window.location.reload();
             } else {
+              setErr(true)
               snackRef.current.handleSnack({
                 message:
                   "Invalid Login Credentials. Please enter correct credentials.",
@@ -70,10 +73,10 @@ function HandleLogin() {
         <Typography variant="caption" color="textSecondary">Please login to your account to continue.</Typography><br/>
     </Grid>
     <Grid item xs={12}>
-    <TextField id="email" value={email} disabled={loading} onChange={(e) => setEmail(e.target.value)} required InputProps={{style:{borderRadius:"35px"}}} placeholder="Email / Phone Number" fullWidth label="Email / Phone Number" variant="outlined" />
+    <TextField id="email" value={email} error={error} helperText={error ? "Invalid credentials." : ""} disabled={loading} onChange={(e) => setEmail(e.target.value)} required InputProps={{style:{borderRadius:"35px"}}} placeholder="Email / Phone Number" fullWidth label="Email / Phone Number" variant="outlined" />
     </Grid>
     <Grid item xs={12}>
-    <TextField id="pass" required disabled={loading} type={showPassword ? "text" : "password"} InputProps={{style:{borderRadius:"35px"},endAdornment: (
+    <TextField id="pass" error={error} required disabled={loading} type={showPassword ? "text" : "password"} InputProps={{style:{borderRadius:"35px"},endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
                             aria-label="toggle password visibility"

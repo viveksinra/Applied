@@ -6,13 +6,9 @@ import {Typography } from '@mui/material/';
 export default function Home() {
   return (
       <main>
-
       <Typography color="primary">I am Home page</Typography>
         <Typography color="secondary">I am Make me</Typography>
       <Link href="/login">Login Page</Link>
       </main>
-  
-   
-    
   );
 }

@@ -1,32 +1,70 @@
 "use client";
-import React,{useState} from 'react'
+import React,{useState,useEffect,useRef, Fragment} from 'react'
 import { Card,List,ListItem,ListItemAvatar,Avatar,ListItemText,Stack,IconButton, Divider,Grid, Typography } from '@mui/material';
 import { FcOk,FcFullTrash  } from "react-icons/fc";
+import {authService} from "../../services/index";
+import MySnackbar from "../../Components/MySnackbar/MySnackbar";
+
 function Invitation() {
-    const [person, setPerson] = useState([{img:"https://pbs.twimg.com/profile_images/1243088393640095745/cB0mYPtq_400x400.jpg",title:"Shandhya Jha",verified:true, subtitle:"@JhaSan44",id:"545sdeww"},{img:"https://media.licdn.com/dms/image/D5603AQEdVjrTnwb9Vw/profile-displayphoto-shrink_800_800/0/1668939665195?e=2147483647&v=beta&t=5ECanC6yVDzzp17UCydoEsq9gMiygWm71_UZ_NK-kkQ",title:"Rohit Kumar",verified:false, subtitle:"@rohit_kr",id:"84514s5d748we"},{img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmLfRY9fQm16euFq3KBvUNwhBIRtCDTwiOCEKEKuzo4VKUcr22Dw7qY_SJcHdUq7AXB4U&usqp=CAU",title:"Vijay Shivankar",verified:true, subtitle:"@vijay_shiva",id:"fdfasdfsdee"},{img:"",title:"Vimal Bhagat",verified:false, subtitle:"@vimal454",id:"5465d4asfsdfae"},{img:"https://media.licdn.com/dms/image/C4D03AQGFtg2MQa5-lg/profile-displayphoto-shrink_800_800/0/1516847454594?e=2147483647&v=beta&t=c1bG_hLv7xvLFG8ASC3IueQhAY-fbddnBIxoqIDjFTc",title:"Surendra Kumar",verified:true, subtitle:"@Surendra",id:"845w5e1w56e154"}])
-  return (
-    <Card elevation={2} sx={{width:'100%',}}>
+  const [loading,setLoading] = useState(false);
+  const snackRef = useRef();
+  const [person, setPerson] = useState([])
+  const getInviteData = async()=>{
+    try {
+        setLoading(true)
+        let res = await authService.get(`api/v1/network/get/invitationReceived`);
+        if(res.variant === "success"){
+          setLoading(false);
+          setPerson(res.data);
+        }  
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
+}
+  useEffect(() => {
+      getInviteData();
+  }, [])
+  const handleAccept = async(i,id,statusId)=>{
+    try {
+        setLoading(true)
+        let res = await authService.post(`api/v1/network/invitation/changeStatus`,{invitationFrom:id,statusId});
+        if(res.variant === "success"){
+          setLoading(false);
+          
+         snackRef.current.handleSnack(res)
+        }  
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
+}
+
+  return (<Fragment>
+    <Card elevation={2} sx={{width:'100%'}}>
          <List disablePadding sx={{ width: '100%', bgcolor: 'background.paper', }} >
         {person?.map((f,i)=><Grid key={i}>
             <ListItem dense disableGutters disablePadding sx={{padding:"0px 10px"}} >
         <ListItemAvatar>
-       <Avatar alt={f?.title} src={f?.img} />
-
+       <Avatar alt={f?.firstName} src={f?.userImage} />
         </ListItemAvatar>
-        <ListItemText primary={<Typography variant="subtitle2" color="primary">{f?.title}</Typography> } secondary={<Stack direction="row" spacing={1}>{f?.subtitle}  &nbsp; {f?.verified && <SvgVerified/> }</Stack>} />
-        <IconButton aria-label="accept" size="small">
-  <FcOk />
-</IconButton>
-<IconButton aria-label="reject" size="small">
-  <FcFullTrash/>
-</IconButton>
+        <ListItemText primary={<Typography variant="subtitle2" color="primary">{`${f.firstName} ${f.lastName}`}</Typography> } secondary={<Stack direction="row" spacing={1}>@{f?.userName}  &nbsp; {f?.verified && <SvgVerified/> }</Stack>} />
+        <IconButton onClick={()=>handleAccept(i,c?._id, "accepted")} aria-label="accept" size="small">
+        <FcOk />
+        </IconButton>
+      <IconButton onClick={()=>handleAccept(i,c?._id, "declined")} aria-label="reject" size="small">
+        <FcFullTrash/>
+      </IconButton>
+      <Divider light/>
       </ListItem>
-    <Divider light/>
         </Grid> 
         
     )}
          </List>
     </Card>
+     <MySnackbar ref={snackRef} />
+  </Fragment>
+    
   )
 }
 

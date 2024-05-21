@@ -2,14 +2,14 @@
 import React,{Fragment} from 'react'
 import Header from "../Components/Header/Header"
 
-function DashboardLayout({ children }) {
+function MyNetworkLayout({ children }) {
   return (
     <Fragment>
-        <Header navTabVal="1">
+        <Header navTabVal="2">
          {children}
     </Header>
     </Fragment>
   )
 }
 
-export default DashboardLayout
+export default MyNetworkLayout
