@@ -15,6 +15,7 @@
     "@mui/material": "^5.15.15",
     "@mui/x-charts": "^7.3.0",
     "axios": "^1.6.8",
+    "emoji-picker-react": "^4.9.3",
     "js-cookie": "^3.0.5",
     "next": "^14.2.2",
     "qs": "^6.12.1",
