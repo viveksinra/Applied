@@ -151,7 +151,7 @@ function YouMayKnow(){
             setLoading(false)
           }
     }
-    return(
+    return( 
         <Grid container spacing={2}>
             <Grid item xs={12} sx={{display:"flex",justifyContent:"space-between"}}>
                 <Typography sx={{fontWeight:"600"}}>People You May Know</Typography>

@@ -172,6 +172,9 @@ function Degree({params}) {
               <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="inherit" onClick={()=>router.push("/dashboard")}>
                 Skip
               </Fab>
+              <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/certificates/${userId}`)} size='small' color="info">
+              Back
+              </Fab>
               <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/patent/${userId}`)} size='small' color="primary">
               Next
               </Fab>

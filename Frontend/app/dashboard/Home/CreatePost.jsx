@@ -91,7 +91,7 @@ const PostImg = styled('div')(({ theme, imgUrl }) => ({
 
   return (
     <main>
-       <Card sx={{padding:"10px 20px", bgcolor: 'background.paper',minHeight:"60px"}}>
+      <Card sx={{padding:"10px 20px", bgcolor: 'background.paper',minHeight:"60px"}}>
       <Box sx={{display:"flex",justifyContent:"space-between"}}>
       <Avatar alt={user?.firstName} src={user?.userImage} />
       <Input fullWidth multiline placeholder={placeholder} value={postData} onChange={(e)=>setPostData(e.target.value)} sx={{paddingLeft:"20px"}} disableUnderline endAdornment={<Stack direction="row" spacing={1} sx={{display:"flex",justifyContent:"center",alignItems:"center",}}><MdOutlineEmojiEmotions id="emoji-box" aria-controls={open ? 'basic-menu' : undefined} aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={e=>setAnchorEl(e.currentTarget)} style={{fontSize:"20px",cursor:"pointer"}}/>

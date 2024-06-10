@@ -59,23 +59,19 @@ const handleCancelInvite=async(i, id)=>{
 }
   return (<Fragment>
         <Card elevation={2} sx={{width:'100%',}}>
-          <List disablePadding sx={{ width: '100%', bgcolor: 'background.paper', }} >
+        <List disablePadding sx={{ width: '100%', bgcolor: 'background.paper', }} >
         {person?.map((f,i)=><Grid key={i}>
          <ListItem dense disableGutters disablePadding sx={{padding:"0px 10px"}} >
         <ListItemAvatar>
         <Avatar alt={f?.firstName} src={f?.userImage} />
-
         </ListItemAvatar>
         <ListItemText primary={<Typography variant="subtitle2" color="primary">{`${f.firstName} ${f.lastName}`}</Typography> } secondary={<Stack direction="row" spacing={1}>@{f?.userName}  &nbsp; {f?.verified && <SvgVerified/> }</Stack>} />
-        {f.pending ?  <Button variant="outlined" endIcon={<FcCancel />} color="secondary" onClick={()=>handleCancelInvite(i,c?._id)} sx={{borderRadius:"30px",fontSize:"12px",textTransform:"capitalize",padding:"2px 10px"}}>Pending</Button> :  <Grid onClick={()=>handleInvite(i,f?._id)}  sx={{width:"80px",textAlign:"center",border:"1px solid #a9c8e7", padding:"0px 16px",borderRadius:"20px",fontSize:"14px",cursor:"pointer",color:"#65abf2"}}>
-        Follow
+        {f.pending ?  <Button variant="outlined" endIcon={<FcCancel />} color="secondary" onClick={()=>handleCancelInvite(i,c?._id)} sx={{borderRadius:"30px",fontSize:"12px",textTransform:"capitalize",padding:"2px 10px"}}>Pending</Button> :  <Grid onClick={()=>handleInvite(i,f?._id)}  sx={{width:"80px",textAlign:"center",border:"1px solid #205179", padding:"0px 16px",borderRadius:"20px",fontSize:"14px",cursor:"pointer",color:"#205179"}}>
+        Connect
         </Grid> }
-      
-        
         </ListItem>
         <Divider light/>
         </Grid> 
-
         )}
           </List>
         </Card>

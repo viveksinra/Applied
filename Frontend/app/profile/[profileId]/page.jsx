@@ -1,6 +1,7 @@
 "use client";
-import React,{Fragment, useState,useEffect,useRef} from 'react'
-import { Card, Container,Grid,styled, Typography,Avatar,Box, Fab,Tab,Table, TableHead, TableRow,TableCell, Divider } from '@mui/material';
+import React,{Fragment, useState,useEffect,useRef} from 'react';
+import Cookies from "js-cookie";
+import { Card, Container,Grid,styled, Typography,Avatar,Box, Fab,Tab,Table, TableHead, TableRow,TableCell, Divider,Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,Button } from '@mui/material';
 import Header from '../../Components/Header/Header';
 import { BsPencilSquare } from "react-icons/bs";
 import { MdConnectWithoutContact,MdOutlineDataExploration,MdStarRate } from "react-icons/md"; 
@@ -10,21 +11,24 @@ import {TabContext,TabList } from '@mui/lab/';
 import MyFeed from "../../dashboard/Home/MyFeed";
 import {authService} from "../../services/index";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
-
+import { FaPencilAlt } from "react-icons/fa";
 import Link from "next/link";
 import Ratings from "./Ratings";
 import Review from './Review';
 function PersonalProfile({params}) {
     const {profileId} = params;
     const [loading, setLoading] = useState(false);
-    const [userData, setUserData] = useState({coverImg:"https://res.cloudinary.com/oasismanors/image/upload/v1715601597/wallpaperflare.com_wallpaper_i06liu.jpg",userImage:"",firstName:"",lastName:"",work:"",company:"",skill:"",experience:""})
+    const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState({coverImg:"https://res.cloudinary.com/oasismanors/image/upload/v1715601597/wallpaperflare.com_wallpaper_i06liu.jpg",userImage:"",firstName:"",lastName:"",work:"",company:"",skill:"",experience:"",headline:""})
     const [stats, setStats] = useState([{title:"Posts",number:"0"}, {title:"Connections",number:"0"}, {title:"Followers", number:"0"},{title:"Following", number:"0"}, {title:"Ratings Received",number:"0"}, {title:"Ratings Send", number:"0"}])
     const [tabVal, setTabVal] = useState('1')
     const [experience,setExp] = useState([{company:"",startDate:"",endDate:"",title:"",desc:""}])
     const [education,setEdu] = useState([{degree:"",university:"",year:0,score:""},{degree:"",university:"",year:0,score:""},{degree:"",university:"",year:0,score:""}])
     const [certification,setCer] = useState([{education:"",subTitle:""},{education:"",subTitle:""}])
     const [patent,setPatent] = useState([{title:"",subTitle:""},{title:"",subTitle:""}])
-    const [lang, setLang] = useState([{title:"",subTitle:""},{title:"",subTitle:""}])
+    const [lang, setLang] = useState([{title:"",subTitle:""},{title:"",subTitle:""}]);
+    const [generalInformation, setGenInfo] = useState("");
+    const [openAbout, setOpenAbout] = useState({open:false,edit:false});
     const snackRef = useRef();
     const CoverBg = styled('div')(() => ({
         background:`url(${userData.coverImg}) no-repeat`,
@@ -42,6 +46,15 @@ function PersonalProfile({params}) {
         //   height: "230px",
         // },
       }));
+
+      
+
+    useEffect(() => {
+      const currentUser = Cookies.get("currentUser");
+      if (currentUser) {
+        setUser(JSON.parse(currentUser));
+      }
+    }, []);
 
       const getBasicData= async()=>{
         try {
@@ -80,6 +93,7 @@ function PersonalProfile({params}) {
               setExp(res.data.experience);
               setLang(res.data.lang);
               setPatent(res.data.patent);
+              setGenInfo(res.data.generalInformation);
             }  
           } catch (error) {
             console.log(error);
@@ -94,7 +108,7 @@ function PersonalProfile({params}) {
       
   return (
     <Fragment>
-        <Header navTabVal="1">
+      <Header navTabVal="1">
         <Container maxWidth="xl">
             <Grid container spacing={2} >
                 <Grid item xs={12} md={9}>
@@ -115,7 +129,7 @@ function PersonalProfile({params}) {
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6}>
                                 <Grid item xs={12} sx={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-                                    <Typography variant="h6">{`${userData?.firstName} ${userData?.lastName}`}</Typography>
+                                    <Typography variant="h6" color="primary" sx={{fontWeight:"600"}}>{`${userData?.firstName} ${userData?.lastName}`}</Typography>
                                     <Box sx={{display:"flex",flexDirection:"row",marginLeft:"10px"}}>
                                   {userData.work && <Typography>&bull; {userData.work}</Typography>}  
                                   {userData?.company && <>
@@ -124,7 +138,7 @@ function PersonalProfile({params}) {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sx={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-                              {userData.skill && <Typography color="textSecondary" variant='caption'>• {userData.skill}</Typography>}  
+                              {userData.headline && <Typography color="textSecondary" variant='caption'>• {userData.headline}</Typography>}  
                               {userData?.experience &&  <Typography color="textSecondary" variant='caption' sx={{margin:"0 10px"}}>&bull; {userData?.experience}</Typography>} 
                                 </Grid>
                                 </Grid>
@@ -144,6 +158,12 @@ function PersonalProfile({params}) {
                                 <Fab variant="extended" sx={{textTransform:"capitalize",padding:"0px 12px"}} size="small" color="primary">
                                     Chat
                                 </Fab>
+                                {user?.userName === profileId && <Link href={`/dashboard/profile/${profileId}`}>
+                                <Fab variant="extended" sx={{textTransform:"capitalize",padding:"0px 12px"}} size="small" color="primary">
+                                <FaPencilAlt style={{marginRight:"6px"}}/>
+                                    Edit 
+                                </Fab>
+                                </Link>}
                                 </Grid>
                                 <Grid item xs={12} md={6} sx={{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                 <Box sx={{backgroundColor:"#f1f0f5",height:"190px",width:"100%",padding:"20px", borderRadius:"16px"}}>
@@ -169,12 +189,38 @@ function PersonalProfile({params}) {
                                 </Box>
                                 </Grid>
                                 <Grid item xs={6}>
-                                <Box sx={{backgroundColor:"#f1f0f5",height:"190px",width:"100%",padding:"20px", borderRadius:"16px",overflow:"hidden"}}>
-                                <Typography sx={{fontWeight:"600"}}>About {userData?.firstName}</Typography>
-                                <Typography variant="subtitle2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae numquam alias earum atque repudiandae ipsum labore aut, maxime cumque, eum, provident minima saepe! Quasi deserunt officia distinctio, ut fugiat eius.</Typography>
-                                <Typography variant="subtitle2">Lorem ipsum dolor sit. </Typography>
-                                <Link href="/" style={{color:"#0180ff"}}>Read More</Link>
+                                <Box sx={{backgroundColor:"#f1f0f5",height:"190px",width:"100%",padding:"20px", borderRadius:"16px",}}>
+                                  <Box sx={{display:"flex",justifyContent:"space-between"}}>
+                                  <Typography sx={{fontWeight:"600"}}>About {userData?.firstName}</Typography>   {user?.userName === profileId && <Link href={`/dashboard/profile/reference/${profileId}`}> <FaPencilAlt/></Link> } 
+                                  </Box>
+                                  <Box sx={{height:"110px",overflow:"hidden"}}>
+                                  <Typography variant="subtitle2">{generalInformation} </Typography>
+                                  </Box>
+                            
+                                <Typography onClick={()=>setOpenAbout({open:true,edit:false})} variant="subtitle2" style={{color:"#0180ff"}}>Read More</Typography>
                                 </Box>
+                                <Dialog
+                                    open={openAbout?.open}
+                                    onClose={()=>setOpenAbout({open:false,edit:false})}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                  >
+                                    <DialogTitle id="alert-dialog-title">
+                                    <Typography sx={{fontWeight:"600"}}>About {userData?.firstName}</Typography> 
+                                    </DialogTitle>
+                                    <DialogContent>
+                                      <DialogContentText id="alert-dialog-description">
+                                      <Typography>{generalInformation}</Typography>
+                                      </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                      <Button onClick={()=>setOpenAbout({open:false,edit:false})}>Cancel</Button>
+                                      {openAbout?.edit &&  <Button onClick={()=>setOpenAbout({open:false,edit:false})} variant="outlined" autoFocus>
+                                        Save
+                                      </Button> }
+                                     
+                                    </DialogActions>
+                                  </Dialog>
                                 </Grid>
                             </Grid> 
                         </Grid>
@@ -331,8 +377,7 @@ function PersonalProfile({params}) {
      
         </Container>
         </Header>
-        
-<MySnackbar ref={snackRef} />
+        <MySnackbar ref={snackRef} />
         </Fragment>
   )
 }

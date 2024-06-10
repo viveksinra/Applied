@@ -3,6 +3,7 @@ import React, { useState,useRef,useEffect, Fragment } from 'react'
 import {Grid, Container, Typography,Card,Box,Badge,TextField,Fab, Stepper,Step,StepLabel, Divider,Table,TableHead,TableRow,TableCell,TableBody,ButtonGroup, IconButton } from '@mui/material/';
 import { useRouter } from "next/navigation";
 import { FcDeleteRow } from "react-icons/fc";
+import { IoTrashBin } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import {authService} from "../../../../services"
 import MySnackbar from "../../../../Components/MySnackbar/MySnackbar";
@@ -150,7 +151,7 @@ function Certificates({params}) {
                           <FaEdit />
                         </IconButton>
                         <IconButton onClick={()=>handleDelete(row)}>
-                          <FcDeleteRow/>
+                        <IoTrashBin style={{color:"crimson"}} />
                         </IconButton>
                       </ButtonGroup>
                       </TableCell>
@@ -173,6 +174,9 @@ function Certificates({params}) {
             <Grid sx={{display:"flex",justifyContent:"space-evenly"}}>
               <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="inherit" onClick={()=>router.push("/dashboard")}>
                 Skip
+              </Fab>
+              <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/experience/${userId}`)} size='small' color="info">
+              Back
               </Fab>
               <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/degree/${userId}`)} size='small' color="primary">
               Next
@@ -319,7 +323,7 @@ function Awards({params}) {
                 <FaEdit />
               </IconButton>
               <IconButton onClick={()=>handleDelete(row)}>
-                <FcDeleteRow/>
+              <IoTrashBin style={{color:"crimson"}} />
               </IconButton>
             </ButtonGroup>
             </TableCell>
@@ -418,7 +422,7 @@ function Achievements({params}) {
       <Grid container spacing={2}>
        
         <Grid item xs={12} md={8}>
-        <TextField value={description} multiline rows={4} disabled={loading} onChange={(e) => setDesc(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Description" fullWidth label="Description" variant="outlined" />
+        <TextField value={description} multiline minRows={4} disabled={loading} onChange={(e) => setDesc(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Description" fullWidth label="Description" variant="outlined" />
         </Grid>
        
         <Grid item xs={12} md={4} className='center'>

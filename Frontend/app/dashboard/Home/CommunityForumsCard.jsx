@@ -14,7 +14,7 @@ function CommunityForumsCard() {
         <Avatar alt={f?.title} src={f?.img} />
         </ListItemAvatar>
         <ListItemText primary={f?.title} secondary={<Typography variant='caption' color="textSecondary">{f?.subtitle}</Typography>} />
-      {f?.unread && <Badge color="secondary" badgeContent={f?.unread}>
+      {f?.unread && <Badge color="primary" badgeContent={f?.unread}>
         <GrMail />
         </Badge>} 
       </ListItem>

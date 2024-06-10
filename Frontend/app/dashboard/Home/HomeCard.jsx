@@ -8,8 +8,8 @@ import Link from 'next/link';
 
 function HomeCard() {
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState("Maria Mayer");
-    const [userImg, setUserImg] = useState("https://mui.com/static/images/avatar/3.jpg");
+    const [name, setName] = useState("");
+    const [userImg, setUserImg] = useState("");
     const [work,setWork] = useState("Sr. Python Developer");
     const [company, setCompany] = useState("Google");
     const [experience, setExp ] = useState("3+ years of Experience");

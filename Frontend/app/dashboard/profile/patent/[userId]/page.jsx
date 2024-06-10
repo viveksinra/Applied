@@ -6,7 +6,8 @@ import {authService} from "../../../../services"
 import { useRouter } from "next/navigation";
 import { FcDeleteRow } from "react-icons/fc";
 import { FaEdit } from "react-icons/fa";
-
+import { LuRectangleHorizontal } from "react-icons/lu";
+import { RiRectangleFill } from "react-icons/ri";
 const steps = ['Experience', 'Certificates', 'Degree', 'Patent','Reference'];
 
 export function MyStepper({value}){
@@ -180,6 +181,9 @@ function Patent({params}) {
                     <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="inherit" onClick={()=>router.push("/dashboard")}>
                     Skip
                     </Fab>
+                    <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/degree/${userId}`)} size='small' color="info">
+              Back
+              </Fab>
                     <Fab variant="extended" sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} onClick={()=>router.push(`/dashboard/profile/reference/${userId}`)} size='small' color="primary">
                     Next
                     </Fab>
@@ -439,6 +443,8 @@ function Languages({params}){
                                 <Rating
                                     name="simple-controlled"
                                     value={l.rating}
+                                    icon={<RiRectangleFill />}
+                                    emptyIcon={<LuRectangleHorizontal />}
                                     max={10}
                                     onChange={(event, newValue) => {
                                         handleRating(newValue,i);
@@ -454,7 +460,5 @@ function Languages({params}){
     </Card>
 
 }
-
-
 
 export default Patent

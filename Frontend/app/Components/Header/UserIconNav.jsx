@@ -70,7 +70,7 @@ export default function UserIconNav({user}) {
         'aria-labelledby': 'basic-button',
       }}
     >
-      <MenuItem onClick={()=>{handleClose();router.push(`/dashboard/profile/${user?.userName}`)}}>
+      <MenuItem onClick={()=>{handleClose();router.push(`/profile/${user?.userName}`)}}>
         <ListItemIcon>
             <FaUser/>
           </ListItemIcon>

@@ -2,7 +2,7 @@
 import React, { useState,useRef,useEffect, Fragment } from 'react'
 import {Grid, Container, Typography,Card,Box,Badge,TextField,Fab, Stepper,Step,StepLabel, Divider,Table,TableHead,TableRow,TableCell,TableBody,ButtonGroup, IconButton } from '@mui/material/';
 import { useRouter } from "next/navigation";
-import { FcDeleteRow } from "react-icons/fc";
+import { IoTrashBin } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import {authService} from "../../../../services"
 import MySnackbar from "../../../../Components/MySnackbar/MySnackbar";
@@ -14,6 +14,7 @@ function Reference({params}) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
+    const [email, setEmail] = useState("");
     const [generalInformation, setGenInfo] = useState("");
     const [allCert, setAllCert] = useState([])
     const snackRef = useRef();
@@ -23,16 +24,16 @@ function Reference({params}) {
         setId(d?._id ?? "");
         setName(d?.name ?? "");
         setContact((d?.contact ?? ""));
+        setEmail(d?.email ?? "")
     }
 
     const handlePerData = async (e) => {
         e.preventDefault();
-        let myData = {_id,userId,name,contact}
+        let myData = {_id,userId,name,contact,email}
         setLoading(true);
         try {
           let res = await authService.post(`api/v1/auth/profile/add/additionalData/reference/${_id}`,myData);
           snackRef.current.handleSnack(res);
-          console.log(res)
           setLoading(false);
           setData("")
           if(res.variant ==="success"){
@@ -57,7 +58,6 @@ function Reference({params}) {
         } catch (error) {
           setLoading(false)
           console.log(error);
-        
         }
       }
 
@@ -127,7 +127,10 @@ function Reference({params}) {
                   <Grid item xs={12} md={4}>
                   <TextField value={contact} disabled={loading} type='number' onChange={(e) => setContact(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Contact" fullWidth label="Contact" variant="outlined" />
                   </Grid>
-                  <Grid item xs={12} md={4} className='center'>
+                  <Grid item xs={12} md={4}>
+                  <TextField value={email} disabled={loading} type='email' onChange={(e) => setEmail(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Email Id" fullWidth label="Email Id" variant="outlined" />
+                  </Grid>
+                  <Grid item xs={12} className='center'>
                     <Fab variant="extended"  type='submit' sx={{textTransform:"capitalize",paddingLeft:"24px",paddingRight:"24px"}} size='small' color="primary">
                   {_id ? "Update Contact" : "Add Contact"}
                     </Fab>
@@ -143,6 +146,7 @@ function Reference({params}) {
                       <TableCell align="left">Sl No.</TableCell>
                       <TableCell align="left">Reference Name</TableCell>
                       <TableCell align="left">Contact No.</TableCell>
+                      <TableCell align="left">Email Id</TableCell>
                       <TableCell align="center">Action</TableCell>
                     </TableRow>
                     </TableHead>
@@ -161,13 +165,16 @@ function Reference({params}) {
                       <TableCell align="left">
                         {row.contact}
                       </TableCell>
+                      <TableCell align="left">
+                        {row.email}
+                      </TableCell>
                       <TableCell align="center">
                         <ButtonGroup variant="text" aria-label="Basic button group">
                         <IconButton onClick={()=>setData(row)}>
                           <FaEdit />
                         </IconButton>
                         <IconButton onClick={()=>handleDelete(row)}>
-                          <FcDeleteRow/>
+                        <IoTrashBin style={{color:"crimson"}} />
                         </IconButton>
                       </ButtonGroup>
                       </TableCell>
@@ -235,7 +242,7 @@ function GeneralInfo({params,generalInformation,setGenInfo}) {
 
   return (
     <Fragment>
-   <Card elevation={3} >
+    <Card elevation={3} >
       <Box sx={{height:"50px",background:"#eff8fe",display:"flex",alignItems:"center"}}>
         <Typography variant="subtitle1" color="#205179" sx={{marginLeft:"20px"}}>General Information</Typography>
       </Box>
@@ -243,7 +250,7 @@ function GeneralInfo({params,generalInformation,setGenInfo}) {
       <form onSubmit={(e) => handlePerData(e)}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-        <TextField value={generalInformation} multiline rows={2} disabled={loading} onChange={(e) => setGenInfo(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Description" fullWidth label="Description" variant="outlined" />
+        <TextField value={generalInformation} multiline minRows={2} disabled={loading} onChange={(e) => setGenInfo(e.target.value)} InputProps={{style:{borderRadius:"35px"}}} placeholder="Description" fullWidth label="Description" variant="outlined" />
         </Grid>
       </Grid>
       </form>

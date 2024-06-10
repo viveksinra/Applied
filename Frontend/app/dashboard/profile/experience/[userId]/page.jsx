@@ -4,7 +4,7 @@ import MySnackbar from "../../../../Components/MySnackbar/MySnackbar";
 import {Grid, Container, Typography,Card,Box,Badge,TextField,Fab, Stepper,Step,StepLabel, Divider,Table,TableHead,TableRow,TableCell,TableBody,ButtonGroup, IconButton } from '@mui/material/';
 import {authService} from "../../../../services"
 import { useRouter } from "next/navigation";
-import { FcDeleteRow } from "react-icons/fc";
+import { IoTrashBin } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 
 const steps = ['Experience', 'Certificates', 'Degree', 'Patent','Reference'];
@@ -192,7 +192,7 @@ function Experience({params}) {
                 <FaEdit />
               </IconButton>
               <IconButton onClick={()=>handleDelete(row)}>
-                <FcDeleteRow/>
+                <IoTrashBin style={{color:"crimson"}}/>
               </IconButton>
             </ButtonGroup>
             </TableCell>

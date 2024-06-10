@@ -39,10 +39,7 @@ function Dashboard() {
            <Link href="/"><Typography color="primary" sx={{fontSize:"14px"}}>View All</Typography></Link> 
            </div>
            <YouMayKnow/>
-       
           </Grid>
-  
-        
         </Grid>
      
       </Container>

@@ -11,6 +11,9 @@ import UserIconNav from "./UserIconNav";
 import Notification from './Notification';
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+// import MyTheme from "../../dashboard/layout"
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -65,9 +68,10 @@ function Header(props) {
 
   return (
     <Fragment>
-    <Box sx={{ display: 'flex',flexDirection:"column" }}>
+      <MyTheme>
+      <Box sx={{ display: 'flex',flexDirection:"column" }}>
       <CssBaseline />
-      <AppBar component="nav" sx={{backgroundColor:"#205179"}}>
+      <AppBar component="nav" color="primary"> 
         <Container maxWidth="xl">
         <Toolbar>
           <IconButton
@@ -79,7 +83,6 @@ function Header(props) {
           >
             <FiMenu  />
           </IconButton>
-        
           <Link href="/">
           <img style={{height:"35px"}} src="https://res.cloudinary.com/qualifier/image/upload/v1714030411/applied-logo-white-horiz_s6zkfp.svg" alt="AppliedLogo" id="loginLogo" />
           </Link>
@@ -118,6 +121,8 @@ function Header(props) {
       </Box>
     </Box>
     <BackToTop {...props}/>
+      </MyTheme>
+    
     </Fragment>
   );
 }
@@ -131,3 +136,26 @@ Header.propTypes = {
 };
 
 export default Header;
+
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#205179',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#be59ff',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+});
+
+
+export const MyTheme = ({children})=>{
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>
+}

@@ -1,6 +1,6 @@
 "use client";
 import React, {useState,useRef, useEffect} from 'react'
-import {Grid,TextField,Typography,Fab,InputAdornment,IconButton,CircularProgress, Divider,Autocomplete,Box,FormControlLabel,Checkbox } from '@mui/material/';
+import {Grid,TextField,Typography,Fab,InputAdornment,IconButton,CircularProgress, Divider,Box,FormControlLabel,Checkbox } from '@mui/material/';
 import { BsEyeSlashFill, BsEyeFill } from "react-icons/bs";
 import { FcKey,FcManager,FcShop,FcOk  } from "react-icons/fc";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import { useLogin } from "../hooks/auth/useLogin";
 import {authService} from "../services/index"
 import countries from './countryCode.js'
 import MySnackbar from "../Components/MySnackbar/MySnackbar";
+import StyledAutocomplete from "../hooks/AutoComplete";
 import Link from 'next/link';
 
 
@@ -204,7 +205,7 @@ function CreateNewAc({setShowAc}) {
         <Typography variant="caption" color="textSecondary">Please fill the form to create your new account.</Typography>
       </Grid>
       <Grid item xs={12}>
-      <center><Typography variant="caption" color="textSecondary"> I want to log in for </Typography></center><br/>
+      <center><Typography variant="caption" color="textSecondary"> Create a login account for </Typography></center><br/>
       <div style={{display:"flex", justifyContent:"space-around"}}>
       <Fab onClick={()=>setBusAcc(!busAcc)}  variant="extended" color={ busAcc? "inherit" : "primary"}  size="small">
       <FcManager style={{fontSize:"20px",marginRight:"10px"}} />
@@ -222,7 +223,7 @@ function CreateNewAc({setShowAc}) {
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={4}>
-          <Autocomplete
+          <StyledAutocomplete
             id="country-select-demo"
             options={countries}
             disabled ={countries.length === 0 || loading}
@@ -248,7 +249,6 @@ function CreateNewAc({setShowAc}) {
               />
             )}
           />
-
           </Grid>
           <Grid item xs={8}>
           <TextField id="phone" value={mobileNumber} disabled={loading} onChange={(e) => setMobile(e.target.value)} type='number' required InputProps={{style:{borderRadius:"35px"}}} placeholder="Phone / Mobile Number" fullWidth label="Phone / Mobile Number" variant="outlined" />
